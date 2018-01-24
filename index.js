@@ -1,7 +1,7 @@
 const http = require('http')
 const request = require('request')
 const mysql = require('mysql2')
-
+const IncreaseChar = require('./IncreaseChar')
 
 const connection = mysql.createConnection({
   host: '188.166.217.69',
@@ -62,20 +62,21 @@ const getDomain = async (search) => {
 
 (async () => {
   const queue = []
-  for (let t1 = 'a'; t1 <= 'z'; t1 = charAdd(t1, 1)) {
-    for (let t2 = 'a'; t2 <= 'z'; t2 = charAdd(t2, 1)) {
-      for (let t3 = 'a'; t3 <= 'z'; t3 = charAdd(t3, 1)) {
-        queue.push(1)
-        queueLimit(async _ => getDomain(t1 + t2 + t3), queue)
+  const increase = new IncreaseChar()
 
-        let lastLength = 0
-        while (queue.length > 100) {
-          if (lastLength !== queue.length) {
-            lastLength = queue.length
-          }
-          await sleepRandom()
-        }
+  while (true) {
+    let result = increase.toString()
+    queue.push(1)
+    queueLimit(async _ => getDomain(result), queue)
+
+    let lastLength = 0
+    while (queue.length > 100) {
+      if (lastLength !== queue.length) {
+        lastLength = queue.length
       }
+      await sleepRandom()
     }
+    increase.add(1)
   }
+
 })()

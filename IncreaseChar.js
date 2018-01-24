@@ -1,14 +1,17 @@
 
 
-class increaseChar {
+module.exports = class IncreaseChar {
   constructor() {
     this.charArray = ['a']
   }
 
-  add() {
-    const result = this.charAdd(this.firstElem(), 1)
-    if (result < 'z') {
-      this.charArray[0] = this.charAdd(this.firstElem(), 1)
+  add(num, position) {
+    if (!position) position = 0
+    this.charArray[position] = IncreaseChar.charAdd(this.charArray[position], num)
+    if (this.charArray[position] > 'z') {
+      this.charArray[position] = 'a'
+      if (this.charArray.length <= position + 1) this.charArray.push('a')
+      else this.add(num, position + 1)
     }
   }
 
@@ -20,7 +23,12 @@ class increaseChar {
     return this.charArray[this.charArray.length]
   }
 
-  charAdd = (char, num) => {
+  static charAdd(char, num) {
     return (String.fromCharCode(char.charCodeAt(0) + num))
+  }
+  
+  toString() {
+    const a = Object.assign([], this.charArray)
+    return a.reverse().toString().replace(/,/g, '')
   }
 }
